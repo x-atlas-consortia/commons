@@ -1,23 +1,23 @@
 from enum import Enum
 import requests
+from consortia_commons.file import load_config_by_key
+import json
 
 ubkg_cache = dict()
-
-class UbkgSuported(str, Enum):
-    SENNET = 'SENNET'
-    HUBMAP = 'HUBMAP'
-
+config_key = 'UBKG'
 
 class Ubkg:
-    def __init__(self, project: UbkgSuported):
-        self.project = project
+    def __init__(self):
         self.error = None
 
     def get_ubkg_valueset(self, code: str):
         try:
             self.error = None
             if code not in ubkg_cache:
-                url = f"https://ontology.api.hubmapconsortium.org/valueset?parent_sab={self.project}&parent_code={code}&child_sabs={self.project}"
+                server = load_config_by_key(config_key, 'server')
+                server_pathname = load_config_by_key(config_key, 'server_pathname')
+                url = f"{server}{server_pathname}"
+                url = url.format(code=code)
                 response = requests.get(url)
                 if response.ok:
                     ubkg_cache[code] = response.json()
@@ -27,42 +27,14 @@ class Ubkg:
 
         return ubkg_cache[code] if code in ubkg_cache else self.error
 
-    def get_specimen_categories(self):
-        return self.get_ubkg_valueset(self.specimen_categories_code)
 
-    def get_assay_types(self):
-        return self.get_ubkg_valueset(self.assay_types_code)
-
-    def get_organ_types(self):
-        return self.get_ubkg_valueset(self.organ_types_code)
-
-
-def _get_sennet_codes():
-    return ['C020076', 'C004000', 'C000008']
-
-
-# TODO: complete
-def _get_hubmap_codes():
-    return []
-
-
-def _get_ubkg_nodes():
-    return ['specimen_categories', 'assay_types', 'organ_types']
-
-
-def initialize_ubkg(project: UbkgSuported):
+def initialize_ubkg():
     try:
-        ubkg_instance = Ubkg(project)
-        nodes = _get_ubkg_nodes()
-        codes = []
-        if project is UbkgSuported.SENNET:
-            codes = _get_sennet_codes()
-        if project is UbkgSuported.HUBMAP:
-            codes = _get_hubmap_codes()
-
-        for i, n in enumerate(nodes):
-            val = codes[i] if 0 <= i < len(codes) else None
-            setattr(ubkg_instance, f"{n}_code", val)
+        ubkg_instance = Ubkg()
+        codes_str = load_config_by_key(config_key, 'codes')
+        codes = json.loads(codes_str)
+        for node, code in codes.items():
+            setattr(ubkg_instance, f"{node}", code)
         return ubkg_instance
     except Exception as e:
         print(e)
