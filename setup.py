@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/x-atlas-consortia/commons",
-    packages=['consortia_commons'],
+    packages=['consortia_commons', 'consortia_commons.rest', 'consortia_commons.ubkg'],
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[
