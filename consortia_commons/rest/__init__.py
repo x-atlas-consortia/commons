@@ -13,6 +13,7 @@ class StatusCodes(IntEnum):
 
 class StatusMsgs(str, Enum):
     OK = 'OK'
+    OK_PARTIAL = 'Partial Success'
     BAD_REQUEST = 'Bad Request'
     NOT_FOUND = 'Not Found'
     UNACCEPTABLE = 'Unacceptable Request'
@@ -39,7 +40,7 @@ def rest_bad_req(desc, dict_only: bool = False):
 
 
 def _rest_return(response, dict_only: bool = False):
-    return response if dict_only is False else full_response(response)
+    return response if dict_only is True else full_response(response)
 
 
 def rest_response(code: StatusCodes, name: str, desc):
