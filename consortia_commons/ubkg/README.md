@@ -3,7 +3,7 @@
 ## Configuration
 
 ### Heading
-`[UBKG]`
+`[UBKG]`. This may be changed by specifying a `config_key` when calling `initialize_ubkg('YOUR_KEY')`
 
 ### Sub Keys
 #### `server` *str*: This is the host name.
