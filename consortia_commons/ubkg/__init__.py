@@ -1,4 +1,3 @@
-from enum import Enum
 import requests
 from consortia_commons.file import load_config_by_key
 import json
