@@ -6,26 +6,43 @@ import json
 ubkg_cache = dict()
 config_key = 'UBKG'
 
+
 class Ubkg:
     def __init__(self):
         self.error = None
 
-    def get_ubkg_valueset(self, code: str):
+    def get_ubkg_valueset(self, node):
+        return self.get_ubkg(node)
+
+    def get_ubkg(self, node, key: str = 'valueset'):
+        code = get_from_node(node)
+        cache_key = f"{key}_{code}"
         try:
             self.error = None
-            if code not in ubkg_cache:
+            if cache_key not in ubkg_cache:
                 server = load_config_by_key(config_key, 'server')
-                server_pathname = load_config_by_key(config_key, 'server_pathname')
-                url = f"{server}{server_pathname}"
+                endpoint = load_config_by_key(config_key, f"endpoint_{key}")
+                url = f"{server}{endpoint}"
                 url = url.format(code=code)
                 response = requests.get(url)
                 if response.ok:
-                    ubkg_cache[code] = response.json()
+                    ubkg_cache[cache_key] = response.json()
         except Exception as e:
             self.error = e
             print(e)
 
-        return ubkg_cache[code] if code in ubkg_cache else self.error
+        return ubkg_cache[cache_key] if cache_key in ubkg_cache else self.error
+
+
+def get_from_node(node, key: str = 'code'):
+    if type(node) is dict:
+        code = node.get(key)
+    else:
+        code = node
+    if type(code) is not str:
+        return None
+    else:
+        return code
 
 
 def initialize_ubkg():
