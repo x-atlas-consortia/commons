@@ -1,5 +1,6 @@
 import requests
 from consortia_commons.file import load_config_by_key
+from consortia_commons.string import trim_dict_or_list
 import json
 
 ubkg_cache = dict()
@@ -13,19 +14,28 @@ class Ubkg:
     def get_ubkg_valueset(self, node):
         return self.get_ubkg(node)
 
-    def get_ubkg(self, node, key: str = 'valueset'):
+    def get_ubkg_by_key(self, node):
+        key = get_from_node(node, 'key')
+        return self.get_ubkg(node, key)
+
+    def get_ubkg_by_endpoint(self, node):
+        key = get_from_node(node, 'key')
+        endpoint = get_from_node(node, 'endpoint')
+        return self.get_ubkg(node, key, endpoint)
+
+    def get_ubkg(self, node, key: str = 'valueset', endpoint: str = None):
         code = get_from_node(node)
         cache_key = f"{key}_{code}"
         try:
             self.error = None
             if cache_key not in ubkg_cache:
                 server = load_config_by_key(config_key, 'server')
-                endpoint = load_config_by_key(config_key, f"endpoint_{key}")
+                endpoint = endpoint if endpoint is not None else load_config_by_key(config_key, f"endpoint_{key}")
                 url = f"{server}{endpoint}"
                 url = url.format(code=code)
                 response = requests.get(url)
                 if response.ok:
-                    ubkg_cache[cache_key] = response.json()
+                    ubkg_cache[cache_key] = trim_dict_or_list(response.json())
         except Exception as e:
             self.error = e
             print(e)
