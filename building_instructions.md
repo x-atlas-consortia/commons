@@ -1,4 +1,4 @@
-### Building and Publishing hubmap-commons
+### Building and Publishing consortia-commons
 
 <a href="https://pypi.org/project/setuptools/">SetupTools</a> and <a href="https://pypi.org/project/wheel/">Wheel</a> is required to build the distribution. <a href="https://pypi.org/project/twine/">Twine</a> is required to publish to Pypi
 
