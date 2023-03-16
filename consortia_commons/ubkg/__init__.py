@@ -4,12 +4,13 @@ from consortia_commons.string import trim_dict_or_list
 import json
 
 ubkg_cache = dict()
-config_key = 'UBKG'
+_config_key = 'UBKG'
 
 
 class Ubkg:
-    def __init__(self):
+    def __init__(self, config_key: str = _config_key):
         self.error = None
+        self.config_key = config_key
 
     def get_ubkg_valueset(self, node):
         return self.get_ubkg(node)
@@ -29,8 +30,8 @@ class Ubkg:
         try:
             self.error = None
             if cache_key not in ubkg_cache:
-                server = load_config_by_key(config_key, 'server')
-                endpoint = endpoint if endpoint is not None else load_config_by_key(config_key, f"endpoint_{key}")
+                server = load_config_by_key(self.config_key, 'server')
+                endpoint = endpoint if endpoint is not None else load_config_by_key(self.config_key, f"endpoint_{key}")
                 url = f"{server}{endpoint}"
                 url = url.format(code=code)
                 response = requests.get(url)
@@ -54,9 +55,9 @@ def get_from_node(node, key: str = 'code'):
         return code
 
 
-def initialize_ubkg():
+def initialize_ubkg(config_key: str = _config_key):
     try:
-        ubkg_instance = Ubkg()
+        ubkg_instance = Ubkg(config_key)
         codes_str = load_config_by_key(config_key, 'codes')
         codes = json.loads(codes_str)
         for node, code in codes.items():
