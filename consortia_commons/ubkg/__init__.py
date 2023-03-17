@@ -1,5 +1,5 @@
 import requests
-from consortia_commons.file import load_config_by_key
+import flask
 from consortia_commons.string import trim_dict_or_list
 import json
 
@@ -8,8 +8,9 @@ _config_key = 'UBKG'
 
 
 class Ubkg:
-    def __init__(self, config_key: str = _config_key):
+    def __init__(self, config: dict, config_key: str = _config_key):
         self.error = None
+        self.config = config
         self.config_key = config_key
 
     def get_ubkg_valueset(self, node):
@@ -24,14 +25,15 @@ class Ubkg:
         endpoint = get_from_node(node, 'endpoint')
         return self.get_ubkg(node, key, endpoint)
 
-    def get_ubkg(self, node, key: str = 'valueset', endpoint: str = None):
+    def get_ubkg(self, node, key: str = 'VALUESET', endpoint: str = None):
         code = get_from_node(node)
         cache_key = f"{key}_{code}"
         try:
             self.error = None
             if cache_key not in ubkg_cache:
-                server = load_config_by_key(self.config_key, 'server')
-                endpoint = endpoint if endpoint is not None else load_config_by_key(self.config_key, f"endpoint_{key}")
+                server = self.config.get(get_server_key(self.config_key))
+                _endpoint = self.config.get(get_endpoint_key(self.config_key, key))
+                endpoint = endpoint if endpoint is not None else _endpoint
                 url = f"{server}{endpoint}"
                 url = url.format(code=code)
                 response = requests.get(url)
@@ -55,16 +57,38 @@ def get_from_node(node, key: str = 'code'):
         return code
 
 
-def initialize_ubkg(config_key: str = _config_key):
+def get_server_key(config_key: str):
+    return f"{config_key}_SERVER"
+
+
+def get_codes_key(config_key: str):
+    return f"{config_key}_CODES"
+
+
+def get_endpoint_key(config_key: str, key: str):
+    return f"{config_key}_ENDPOINT_{key}"
+
+
+def verify_config(config: dict, config_key: str = _config_key) -> bool:
+    if type(config) is not dict and not isinstance(config, flask.config.Config):
+        return False
+    else:
+        if get_server_key(config_key) not in config or get_codes_key(config_key) not in config:
+            return False
+        else:
+            return True
+
+
+def initialize_ubkg(config: dict, config_key: str = _config_key):
     try:
-        ubkg_instance = Ubkg(config_key)
-        codes_str = load_config_by_key(config_key, 'codes')
-        codes = json.loads(codes_str)
-        for node, code in codes.items():
-            setattr(ubkg_instance, f"{node}", code)
-        return ubkg_instance
+        if verify_config(config, config_key):
+            ubkg_instance = Ubkg(config, config_key)
+            codes_str = config.get(get_codes_key(config_key))
+            codes = json.loads(codes_str)
+            for node, code in codes.items():
+                setattr(ubkg_instance, f"{node}", code)
+            return ubkg_instance
+        else:
+            return None
     except Exception as e:
         print(e)
-
-
-
