@@ -50,13 +50,13 @@ class Ubkg:
 
 def get_from_node(node, key: str = 'code'):
     if type(node) is dict:
-        code = node.get(key)
+        val = node.get(key)
     else:
-        code = node
-    if type(code) is not str:
+        val = node
+    if type(val) is not str:
         return None
     else:
-        return code
+        return val
 
 
 def get_server_key(config_key: str):
@@ -85,10 +85,10 @@ def initialize_ubkg(config: dict, config_key: str = _config_key):
     try:
         if verify_config(config, config_key):
             ubkg_instance = Ubkg(config, config_key)
-            codes_str = config.get(get_codes_key(config_key))
-            codes = json.loads(codes_str)
-            for node, code in codes.items():
-                setattr(ubkg_instance, f"{node}", code)
+            value_str = config.get(get_codes_key(config_key))
+            items = json.loads(value_str)
+            for node, val in items.items():
+                setattr(ubkg_instance, f"{node}", val)
             return ubkg_instance
         else:
             return None
