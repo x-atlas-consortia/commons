@@ -16,7 +16,8 @@ setup(
               'consortia_commons.rest',
               'consortia_commons.ubkg',
               'consortia_commons.file',
-              'consortia_commons.string'],
+              'consortia_commons.string',
+              'consortia_commons.object'],
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[

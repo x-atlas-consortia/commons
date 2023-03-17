@@ -1,3 +1,6 @@
+import re
+
+
 def trim_dict_or_list(item):
     if type(item) is list:
         for i, v in enumerate(item):
@@ -13,3 +16,31 @@ def trim_dict_or_list(item):
                 trim_dict_or_list(v)
 
     return item
+
+
+def _to_case(val: str, case: str):
+    _val = re.sub(r"[^a-zA-Z0-9 ]+", "", val)
+    _val = _val.strip().lower()
+    if case == 'camel':
+        _val = ''.join(x for x in _val.title() if x.isalnum())
+        return _val[0].lower() + _val[1:]
+    elif case == 'pascal':
+        _val = _val.title()
+        return _val.replace(' ', '')
+    elif case == 'title':
+        return _val.title()
+    else:
+        # snake
+        return _val.replace(' ', '_')
+
+
+def to_snake_case(val):
+    return _to_case(val, 'snake')
+
+
+def to_pascal_case(val):
+    return _to_case(val, 'pascal')
+
+
+def to_camel_case(val):
+    return _to_case(val, 'camel')
