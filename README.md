@@ -16,6 +16,8 @@ The consortia-commons requirements can be found [here](requirements.txt)
 ### Contents
 
 The code includes:
+- UBKG: For querying Unified Biomedical Knowledge Graph (UBKG) application interface
+- REST: For making standardised rest responses
 
 
 ### Coding Conventions
