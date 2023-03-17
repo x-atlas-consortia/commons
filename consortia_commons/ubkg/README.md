@@ -2,7 +2,7 @@
 
 ## Configuration
 
-### CONFIG KEY
+### CONFIG PREFIX KEY
 `UBKG`. This may be changed by specifying a `config_key` when calling `initialize_ubkg(config, 'YOUR_KEY')`
 
 ### Sub Keys
@@ -18,7 +18,7 @@ UBKG_CODES = '{"specimen_categories":"C020076", "organ_types": {"code": "C000008
 ```
 Notice that the value can either be another `str`, or JSON with the following properties:
 - `code` *str*: Required. This is used as suffix of the cache dict key.
-- `key` *str*: Required. Specify this to point to a specific `UBKG_ENDPOINT_$key` configuration and as prefix of cache dict key.
+- `key` *str*: Required. Specify this to point to a specific `UBKG_ENDPOINT_$key` configuration and as prefix of cache dict key. (This is useful to have several nodes point to the same endpoint)
 - `endpoint` *str*: Specify a specific endpoint to query. 
 
 In the example `UBKG_CODES` above, programmatically could have:
@@ -33,7 +33,7 @@ def valuesets():
     return _respond(response)
     
 @app.route('/foo')
-def datasets():
+def foo():
     response = ubkg.get_ubkg_by_key(ubkg.organ_types)
     # response = ubkg.get_ubkg_by_key(ubkg.organ_metadata)
     return _respond(response)
