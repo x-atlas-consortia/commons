@@ -1,6 +1,7 @@
 import requests
 import flask
 from consortia_commons.string import trim_dict_or_list
+from consortia_commons.file import ensure_trailing_slash_url
 import json
 
 ubkg_cache = dict()
@@ -32,6 +33,7 @@ class Ubkg:
             self.error = None
             if cache_key not in ubkg_cache:
                 server = self.config.get(get_server_key(self.config_key))
+                server = ensure_trailing_slash_url(server)
                 _endpoint = self.config.get(get_endpoint_key(self.config_key, key))
                 endpoint = endpoint if endpoint is not None else _endpoint
                 url = f"{server}{endpoint}"
