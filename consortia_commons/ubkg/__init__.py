@@ -14,6 +14,9 @@ class Ubkg:
         self.config = config
         self.config_key = config_key
 
+    def get_cache(self):
+        return ubkg_cache
+
     def get_ubkg_valueset(self, node):
         return self.get_ubkg(node)
 
@@ -59,15 +62,15 @@ def get_from_node(node, key: str = 'code'):
         return val
 
 
-def get_server_key(config_key: str):
+def get_server_key(config_key: str) -> str:
     return f"{config_key}_SERVER"
 
 
-def get_codes_key(config_key: str):
+def get_codes_key(config_key: str) -> str:
     return f"{config_key}_CODES"
 
 
-def get_endpoint_key(config_key: str, key: str):
+def get_endpoint_key(config_key: str, key: str) -> str:
     return f"{config_key}_ENDPOINT_{key}"
 
 

@@ -18,7 +18,7 @@ def trim_dict_or_list(item):
     return item
 
 
-def _to_case(val: str, case: str):
+def _to_case(val: str, case: str) -> str:
     _val = re.sub(r"[^a-zA-Z0-9 ]+", "", val)
     _val = _val.strip().lower()
     if case == 'camel':
@@ -34,13 +34,13 @@ def _to_case(val: str, case: str):
         return _val.replace(' ', '_')
 
 
-def to_snake_case(val):
+def to_snake_case(val) -> str:
     return _to_case(val, 'snake')
 
 
-def to_pascal_case(val):
+def to_pascal_case(val) -> str:
     return _to_case(val, 'pascal')
 
 
-def to_camel_case(val):
+def to_camel_case(val) -> str:
     return _to_case(val, 'camel')
