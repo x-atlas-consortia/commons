@@ -4,20 +4,20 @@ This repository contains the code supporting several restful microservices used 
 
 ### Getting Started
 
-The consortia commons library is available through PyPi via the command:
+The Atlas Consortia Commons library is available through PyPi via the command:
 
 ```bash
-pip install consortia-commons
+pip install atlas-consortia-commons
 ```
 
-The consortia-commons requirements can be found [here](requirements.txt)
+The atlas-consortia-commons requirements can be found [here](requirements.txt)
 
 
 ### Contents
 
 The code includes:
-- UBKG: For querying Unified Biomedical Knowledge Graph (UBKG) application interface
-- REST: For making standardised rest responses
+- [UBKG](atlas_consortia_commons/ubkg/README.md): For querying Unified Biomedical Knowledge Graph (UBKG) application interface
+- [REST](atlas_consortia_commons/rest/README.md): For making standardised rest responses
 
 
 ### Coding Conventions
