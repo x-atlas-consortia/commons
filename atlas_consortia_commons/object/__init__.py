@@ -1,6 +1,6 @@
 import enum
 from typing import Union
-from consortia_commons.string import to_snake_case
+from atlas_consortia_commons.string import to_snake_case
 
 
 def build_enum_class(class_name: str, data: Union[list, dict], key: str = None, val_callback=None,
