@@ -1,17 +1,18 @@
 from enum import IntEnum, Enum
-from flask import request, abort, make_response, Response
+from flask import request, abort, make_response, Response, jsonify
 from typing import Union
+from werkzeug.exceptions import NotFound, Forbidden, BadRequest, NotAcceptable, Unauthorized, InternalServerError
 
 
 class StatusCodes(IntEnum):
     OK = 200
     OK_PARTIAL = 207
-    BAD_REQUEST = 400
-    NOT_FOUND = 404
-    UNACCEPTABLE = 406
-    SERVER_ERR = 500
-    FORBIDDEN = 403
-    UNAUTHORIZED = 401
+    BAD_REQUEST = BadRequest.code
+    NOT_FOUND = NotFound.code
+    UNACCEPTABLE = NotAcceptable.code
+    SERVER_ERR = InternalServerError.code
+    FORBIDDEN = Forbidden.code
+    UNAUTHORIZED = Unauthorized.code
 
 
 class StatusMsgs(str, Enum):
@@ -83,6 +84,14 @@ def get_json_header(headers: dict = None) -> dict:
     return headers
 
 
+def get_http_exceptions_classes():
+    return [NotFound, Forbidden, BadRequest, NotAcceptable, Unauthorized, InternalServerError]
+
+
+def abort_err_handler(e):
+    return jsonify(error=str(e)), e.code
+
+
 def abort_bad_req(desc):
     abort(StatusCodes.BAD_REQUEST, description=desc)
 
@@ -101,4 +110,8 @@ def abort_forbidden(desc):
 
 def abort_unauthorized(desc):
     abort(StatusCodes.UNAUTHORIZED, description=desc)
+
+
+def abort_unacceptable(desc):
+    abort(StatusCodes.UNACCEPTABLE, description=desc)
 
