@@ -44,3 +44,10 @@ def to_pascal_case(val) -> str:
 
 def to_camel_case(val) -> str:
     return _to_case(val, 'camel')
+
+
+def to_title_case(val) -> str:
+    return _to_case(val, 'title')
+
+
+
