@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="atlas-consortia-commons",
-    version="0.0.1",
+    version="1.0.0",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
