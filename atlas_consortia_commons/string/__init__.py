@@ -50,4 +50,9 @@ def to_title_case(val) -> str:
     return _to_case(val, 'title')
 
 
-
+def equals(str1: str, str2: str, insensitive: bool = True):
+    res = str1 == str2
+    if insensitive is True:
+        if str1 is not None and str2 is not None:
+            res = str1.lower() == str2.lower()
+    return res
