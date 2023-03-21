@@ -1,7 +1,7 @@
 import requests
 import flask
-from consortia_commons.string import trim_dict_or_list
-from consortia_commons.file import ensure_trailing_slash_url
+from atlas_consortia_commons.string import trim_dict_or_list
+from atlas_consortia_commons.file import ensure_trailing_slash_url
 import json
 
 ubkg_cache = dict()
