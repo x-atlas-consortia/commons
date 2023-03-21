@@ -1,4 +1,5 @@
 # commons
+[![PyPI version](https://badge.fury.io/py/atlas-consortia-commons.svg)](https://badge.fury.io/py/atlas-consortia-commons)
 
 This repository contains the code supporting several restful microservices used by the consortia.
 
