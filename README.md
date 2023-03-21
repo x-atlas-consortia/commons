@@ -4,7 +4,7 @@ This repository contains the code supporting several restful microservices used 
 
 ### Getting Started
 
-The consortia commons library is available through PyPi via the command:
+The Atlas Consortia Commons library is available through PyPi via the command:
 
 ```bash
 pip install atlas-consortia-commons
