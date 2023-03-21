@@ -4,20 +4,20 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="consortia-commons",
-    version="1.0.3",
+    name="atlas-consortia-commons",
+    version="0.0.1",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/x-atlas-consortia/commons",
-    packages=['consortia_commons',
-              'consortia_commons.rest',
-              'consortia_commons.ubkg',
-              'consortia_commons.file',
-              'consortia_commons.string',
-              'consortia_commons.object'],
+    packages=['atlas_consortia_commons',
+              'atlas_consortia_commons.rest',
+              'atlas_consortia_commons.ubkg',
+              'atlas_consortia_commons.file',
+              'atlas_consortia_commons.string',
+              'atlas_consortia_commons.object'],
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[

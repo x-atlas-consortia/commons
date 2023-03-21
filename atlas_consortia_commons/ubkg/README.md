@@ -1,4 +1,4 @@
-# Consortia Commons > UBKG
+# Atlas Consortia Commons > UBKG
 
 ## Configuration
 
@@ -23,8 +23,8 @@ Notice that the value can either be another `str`, or JSON with the following pr
 
 In the example `UBKG_CODES` above, programmatically could have:
 ```
-from consortia_commons.ubkg import initialize_ubkg
-from consortia_commons.rest import rest_ok, rest_server_err
+from atlas_consortia_commons.ubkg import initialize_ubkg
+from atlas_consortia_commons.rest import rest_ok, rest_server_err
 
 ubkg = initialize_ubkg(config)
 @app.route('/')
