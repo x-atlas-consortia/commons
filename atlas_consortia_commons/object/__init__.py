@@ -14,7 +14,7 @@ def build_enum_class(class_name: str, data: Union[list, dict], prop_key: str = N
     def _populate_props(_item):
         prop = _item.get(prop_key)
         val = _item if data_as_val is True else _item.get(val_key)
-        prop = prop_callback(prop) if prop_callback is not None else prop
+        prop = prop if prop_callback is None else prop_callback(prop)
         _props[prop] = val if val_callback is None else val_callback(val)
 
     try:
