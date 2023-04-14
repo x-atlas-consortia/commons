@@ -37,3 +37,18 @@ def build_enum_class(class_name: str, data: Union[list, dict], prop_key: str = N
             return type(class_name, (), _props)
     except Exception as e:
         print(e)
+
+
+def includes(data, keyword, as_list=True, insensitive=True, single_index=False):
+    results = []
+    for i, val in enumerate(data):
+        if equals(val, keyword, insensitive):
+            if as_list is True:
+                results.append(i)
+            else:
+                return True
+
+    if as_list and single_index:
+        return results[0] if len(results) > 0 else -1
+
+    return results if as_list is True else False
