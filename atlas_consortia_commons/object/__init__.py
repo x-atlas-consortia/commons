@@ -1,26 +1,38 @@
 import enum
 from typing import Union
-from atlas_consortia_commons.string import to_snake_case
+from atlas_consortia_commons.string import to_snake_case_upper, equals
 
 
-def build_enum_class(class_name: str, data: Union[list, dict], key: str = None, val_callback=None,
-                     obj_type: str = 'class'):
+def build_enum_class(class_name: str, data: Union[list, dict], prop_key: str = None, val_key: str = None,
+                     prop_callback=to_snake_case_upper, val_callback=None,
+                     obj_type: str = 'class', data_as_val: bool = False):
     _props = {}
+
+    if val_key is None:
+        val_key = prop_key
+
+    def _populate_props(_item):
+        prop = _item.get(prop_key)
+        val = _item if data_as_val is True else _item.get(val_key)
+        prop = prop_callback(prop) if prop_callback is not None else prop
+        _props[prop] = val if val_callback is None else val_callback(val)
+
     try:
         if type(data) is list:
             for item in data:
-                val = item.get(key)
-                prop = to_snake_case(val).upper()
-                _props[prop] = val if val_callback is None else val_callback(val)
+                _populate_props(item)
         else:
-            if key is not None:
-                val = data.get(key)
-                prop = to_snake_case(val).upper()
-                _props[prop] = val if val_callback is None else val_callback(val)
+            if prop_key is not None:
+                _populate_props(data)
             else:
                 _props = data
-        if obj_type == 'enum':
+
+        if equals(obj_type, 'enum'):
             return enum.Enum(class_name, _props)
+        elif equals(obj_type, 'dict'):
+            return _props
+        elif equals(obj_type, 'list'):
+            return list(_props.keys())
         else:
             return type(class_name, (), _props)
     except Exception as e:
