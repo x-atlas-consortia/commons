@@ -38,6 +38,10 @@ def to_snake_case(val) -> str:
     return _to_case(val, 'snake')
 
 
+def to_snake_case_upper(val) -> str:
+    return _to_case(val, 'snake').upper()
+
+
 def to_pascal_case(val) -> str:
     return _to_case(val, 'pascal')
 
