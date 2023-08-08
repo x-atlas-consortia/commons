@@ -5,6 +5,15 @@ import base64
 
 from flask import current_app
 
+ubkg_instance = None
+
+def _set_instance(_ubkg):
+    global ubkg_instance
+    ubkg_instance = _ubkg
+
+def _get_instance():
+    return ubkg_instance if ubkg_instance is not None else current_app.ubkg
+
 
 class UbkgSDK:
     class Ops:
@@ -43,24 +52,24 @@ class UbkgSDK:
 
     @staticmethod
     def entities():
-        return UbkgSDK.transform_ontology(current_app.ubkg.entities, 'Entities')
+        return UbkgSDK.transform_ontology(_get_instance().entities, 'Entities')
 
     @staticmethod
     def assay_types():
         UbkgSDK.Ops.key = 'data_type'
-        return UbkgSDK.transform_ontology(current_app.ubkg.assay_types, 'AssayTypes')
+        return UbkgSDK.transform_ontology(_get_instance().assay_types, 'AssayTypes')
 
     @staticmethod
     def specimen_categories():
-        return UbkgSDK.transform_ontology(current_app.ubkg.specimen_categories, 'SpecimenCategories')
+        return UbkgSDK.transform_ontology(_get_instance().specimen_categories, 'SpecimenCategories')
 
     @staticmethod
     def organ_types():
-        return UbkgSDK.transform_ontology(current_app.ubkg.organ_types, 'OrganTypes')
+        return UbkgSDK.transform_ontology(_get_instance().organ_types, 'OrganTypes')
 
     @staticmethod
     def source_types():
-        return UbkgSDK.transform_ontology(current_app.ubkg.source_types, 'SourceTypes')
+        return UbkgSDK.transform_ontology(_get_instance().source_types, 'SourceTypes')
 
     @staticmethod
     def node_data(obj, class_name: str = 'OntologyNode'):
@@ -82,13 +91,17 @@ class UbkgSDK:
         endpoint = get_from_node(obj, 'endpoint')
         if type(obj) is not str and endpoint:
             if url_params is None:
-                return current_app.ubkg.get_ubkg_by_endpoint(obj)
+                return _get_instance().get_ubkg_by_endpoint(obj)
             else:
                 key = base64.b64encode(url_params.encode('utf-8')).decode('utf-8')
                 key = key.replace("=", '')
-                return current_app.ubkg.get_ubkg(obj, key, f"{endpoint}{url_params}")
+                return _get_instance().get_ubkg(obj, key, f"{endpoint}{url_params}")
         else:
-            return current_app.ubkg.get_ubkg_valueset(obj)
+            return _get_instance().get_ubkg_valueset(obj)
+
+    @staticmethod
+    def set_instance(_ubkg):
+        _set_instance(_ubkg)
 
 
 def init_ontology():
