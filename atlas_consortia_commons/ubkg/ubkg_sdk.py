@@ -1,5 +1,5 @@
 from atlas_consortia_commons.object import build_enum_class
-from atlas_consortia_commons.ubkg import get_from_node
+from atlas_consortia_commons.ubkg import get_from_node, get_server_key, get_endpoint_key
 from atlas_consortia_commons.string import to_snake_case_upper, equals
 import base64
 
@@ -7,9 +7,11 @@ from flask import current_app
 
 ubkg_instance = None
 
+
 def _set_instance(_ubkg):
     global ubkg_instance
     ubkg_instance = _ubkg
+
 
 def _get_instance():
     return ubkg_instance if ubkg_instance is not None else current_app.ubkg
@@ -102,6 +104,21 @@ class UbkgSDK:
     @staticmethod
     def set_instance(_ubkg):
         _set_instance(_ubkg)
+
+    @staticmethod
+    def ubkg_sever():
+        key = get_server_key(_get_instance().config_key)
+        return _get_instance().config[key]
+
+    @staticmethod
+    def get_endpoint(obj):
+        return f"{UbkgSDK.ubkg_sever()}{get_from_node(obj, 'endpoint')}"
+
+    @staticmethod
+    def get_endpoint_with_code(code: str, endpoint_key: str = 'VALUESET'):
+        key = get_endpoint_key(_get_instance().config_key, endpoint_key)
+        ep = f"{UbkgSDK.ubkg_sever()}{_get_instance().config[key]}"
+        return ep.format(code=code)
 
 
 def init_ontology():
