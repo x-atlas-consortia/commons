@@ -52,3 +52,11 @@ def includes(data, keyword, as_list=True, insensitive=True, single_index=False):
         return results[0] if len(results) > 0 else -1
 
     return results if as_list is True else False
+
+
+def enum_val_lower(member):
+    return member.value.lower()
+
+
+def enum_val(member):
+    return member.value
