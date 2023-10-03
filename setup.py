@@ -6,8 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="atlas-consortia-commons",
     # Test PyPi version
-    # version="1.0.4"
-    version="1.0.3",
+    version="1.0.5",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
@@ -23,7 +22,8 @@ setup(
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[
-        'Flask>=2.1.3',
+        'Flask==2.1.3',
+        'Werkzeug==2.3.7'
         # For now use pinned version of jsonref due to breaking changes made in 1.0.0
         'jsonref==0.3.0',
         'jsonschema>=3.2.0',
