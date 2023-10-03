@@ -1,4 +1,5 @@
-Flask>=2.1.3
+Flask==2.1.3
+Werkzeug==2.3.7
 # For now use pinned version of jsonref due to breaking changes made in 1.0.0
 jsonref==0.3.0
 jsonschema>=3.2.0
