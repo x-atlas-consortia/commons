@@ -62,6 +62,10 @@ class UbkgSDK:
         return UbkgSDK.transform_ontology(_get_instance().assay_types, 'AssayTypes')
 
     @staticmethod
+    def dataset_types():
+        return UbkgSDK.transform_ontology(_get_instance().dataset_types, 'DatasetTypes')
+
+    @staticmethod
     def specimen_categories():
         return UbkgSDK.transform_ontology(_get_instance().specimen_categories, 'SpecimenCategories')
 
@@ -126,4 +130,5 @@ def init_ontology():
     UbkgSDK.organ_types()
     UbkgSDK.entities()
     UbkgSDK.assay_types()
+    UbkgSDK.dataset_types()
     UbkgSDK.source_types()
