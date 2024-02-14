@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="atlas-consortia-commons",
     # Test PyPi version
-    # version="1.1.0",
+    # version="1.0.10",
     # Prod PyPi version
     version="1.0.9",
     author="Atlas Consortia",
