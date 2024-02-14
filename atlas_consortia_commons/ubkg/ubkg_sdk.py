@@ -110,6 +110,11 @@ class UbkgSDK:
         _set_instance(_ubkg)
 
     @staticmethod
+    def get_instance():
+        return _get_instance()
+
+
+    @staticmethod
     def ubkg_sever():
         key = get_server_key(_get_instance().config_key)
         return _get_instance().config[key]
@@ -126,9 +131,12 @@ class UbkgSDK:
 
 
 def init_ontology():
-    UbkgSDK.specimen_categories()
-    UbkgSDK.organ_types()
-    UbkgSDK.entities()
-    UbkgSDK.assay_types()
-    UbkgSDK.dataset_types()
-    UbkgSDK.source_types()
+    try:
+        UbkgSDK.specimen_categories()
+        UbkgSDK.organ_types()
+        UbkgSDK.entities()
+        UbkgSDK.assay_types()
+        UbkgSDK.dataset_types()
+        UbkgSDK.source_types()
+    except Exception as e:
+        print(e)
