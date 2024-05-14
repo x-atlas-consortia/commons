@@ -20,7 +20,9 @@ setup(
               'atlas_consortia_commons.ubkg',
               'atlas_consortia_commons.file',
               'atlas_consortia_commons.string',
-              'atlas_consortia_commons.object'],
+              'atlas_consortia_commons.object',
+              'atlas_consortia_commons.converter',
+              'atlas_consortia_commons.decorator'],
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[
