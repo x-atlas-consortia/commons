@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -26,6 +26,7 @@ setup(
     install_requires=[
         'Flask==2.1.3',
         'Werkzeug==2.3.7',
+        'hubmap-commons>=2.1.14',
         # For now use pinned version of jsonref due to breaking changes made in 1.0.0
         'jsonref==0.3.0',
         'jsonschema>=3.2.0',
