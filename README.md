@@ -26,3 +26,14 @@ The code includes:
   - `snake_case` to name methods and variables. 
   - `PascalCase` for class names.
 - Do follow any additional code formatting and styles as seen in the project
+
+
+### Running Tests
+- Install `pytest` using the command
+```bash
+pip install -r requirements.dev.txt
+```
+- Run the tests using the command
+```bash
+pytest
+```
