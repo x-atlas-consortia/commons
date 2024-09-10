@@ -292,3 +292,88 @@ def require_valid_token(param: str = "token", user_param: str = "user"):
         return decorated_function
 
     return decorator
+
+
+def optional_valid_token(param: str = "token", user_param: str = "user"):
+    """A decorator that checks if a provided token is valid, if one is provided.
+
+    If a token is provided in the Authorization header, it will be validated. If no
+    token is provided, the decorated function will be called with `None` as the token
+    and `None` as the user.
+
+    If the decorated function has a parameter with the same name as `param`, the
+    user's token or `None` will be passed as that parameter. If the request has an
+    invalid token, a 401 Unauthorized response will be returned.
+
+    If the decorated function has a parameter with the same name as `user`, the
+    user or `None` will be passed as that parameter. The `user` is of type 
+    `decorator.User` or `None`.
+
+    Parameters
+    ----------
+    param : str
+        The name of the parameter to pass the user's token or `None` to. Defaults to
+        "token".
+    user_param : str
+        The name of the parameter to pass the user's information or `None` to. Defaults
+        to "user".
+
+    Example
+    -------
+        @app.route("/foo", methods=["POST"])
+        @optional_valid_token(param="foo_token", user_param="foo_user")
+        def foo(foo_token: Optional[str], foo_user: Optional[User]):
+            return jsonify({
+                "message": (
+                    f"You are a valid user with token {foo_token} "
+                    f"and groups {user.group_uuids}!"
+                )
+            })
+
+        @app.route("/bar", methods=["PUT"])
+        @optional_valid_token()
+        def bar(token: Optional[str]):
+            return jsonify({"message": f"You are a valid user with token {token}!"})
+    """
+
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            token = request.headers.get("Authorization") is None
+            user_info = None
+
+            if token is not None:
+                auth_helper = AuthHelper.configured_instance(
+                    current_app.config["APP_CLIENT_ID"],
+                    current_app.config["APP_CLIENT_SECRET"],
+                )
+                token = auth_helper.getUserTokenFromRequest(request, getGroups=True)
+                if not isinstance(token, str):
+                    print("Token is not a string")
+                    abort_unauthorized("User must be a member of the SenNet Consortium")
+
+                user_info = auth_helper.getUserInfo(token, getGroups=True)
+                if not isinstance(user_info, dict):
+                    print("User info is not a dict")
+                    abort_unauthorized("User must be a member of the SenNet Consortium")
+
+            if param in signature(f).parameters:
+                kwargs[param] = token
+
+            if user_param in signature(f).parameters:
+                if token is not None and user_info is not None:
+                    is_admin = auth_helper.has_data_admin_privs(token)
+                    kwargs[user_param] = User(
+                        uuid=user_info.get("sub"),
+                        email=user_info.get("email"),
+                        group_uuids=user_info.get("hmgroupids", []),
+                        is_data_admin=isinstance(is_admin, bool) and is_admin is True,
+                    )
+                else:
+                    kwargs[user_param] = None
+
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator
