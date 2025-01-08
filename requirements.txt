@@ -8,7 +8,7 @@ pytz>=2021.1
 property>=2.2
 hubmap-commons>=2.1.18
 
-# Airflow dependes on globus_sdk==1.9.0
+# Airflow dependes on globus_sdk==2.0.1
 globus_sdk>=2.0.1
 
 # cwltool uses prov==1.5.1

@@ -4,11 +4,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="atlas-consortia-commons",
+    name="atlas_consortia_commons",
     # Test PyPi version
     # version="1.0.13",
     # Prod PyPi version
-    version="1.0.10",
+    version="1.1.0",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
@@ -26,24 +26,24 @@ setup(
     package_data={'': ['*.json']},
     include_package_data=True,
     install_requires=[
-        'Flask>=2.1.3',
-        'Werkzeug>=2.3.7',
-        'hubmap-commons>=2.1.14',
+        'Flask>=3.0.3',
+        'Werkzeug>=3.0.3',
+        'hubmap-commons>=2.1.18',
         # For now use pinned version of jsonref due to breaking changes made in 1.0.0
         'jsonref==0.3.0',
         'jsonschema>=3.2.0',
-        'neo4j>=4.2.1',
+        'neo4j>=5.20.0',
         'pytz>=2021.1',
         'property>=2.2',
-        # Airflow dependes on globus_sdk==1.9.0
-        'globus_sdk>=1.9.0',
+        # Airflow dependes on globus_sdk==2.0.1
+        'globus_sdk>=2.0.1',
         # cwltool uses prov==1.5.1
         # Will remove provenance.py and this prov dependency later
         'prov>=1.5.1',
         # It's an agreement with other collaborators to use the beblow versions
         # for requests and PyYAML
-        'requests>=2.22.0',
-        'PyYAML>=5.3.1'
+        'requests>=2.32.3',
+        'PyYAML>=6.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
