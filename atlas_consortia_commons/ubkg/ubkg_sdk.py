@@ -66,6 +66,7 @@ class UbkgSDK:
 
     @staticmethod
     def dataset_types():
+        UbkgSDK.Ops.key = 'dataset_type'
         return UbkgSDK.transform_ontology(_get_instance().dataset_types, 'DatasetTypes')
 
     @staticmethod
