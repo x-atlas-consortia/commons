@@ -44,6 +44,21 @@ Will return the following transform result:
 {'DATASET': {'code': 'C050002', 'sab': 'SENNET', 'term': 'Dataset'}, 'SAMPLE': {'code': 'C050003', 'sab': 'SENNET', 'term': 'Sample'}, 'SOURCE': {'code': 'C050004', 'sab': 'SENNET', 'term': 'Source'}, 'PUBLICATION_ENTITY': {'code': 'C050021', 'sab': 'SENNET', 'term': 'Publication Entity'}}
 ```
 
+```
+def prop_callback(d):
+    return d["assaytype"]
+
+def val_callback(d):
+    return d["dataset_type"]
+    
+UbkgSDK.ops(prop_callback=prop_callback, val_callback=val_callback, as_arr=True, cb=enum_val).assay_classes()
+```
+Will return the following transform result:
+```
+['Auto-fluorescence', 'ATACseq', 'Cell DIVE', 'CODEX', 'DART-FISH', 'DESI', 'UNKNOWN', '2D Imaging Mass Cytometry', '3D Imaging Mass Cytometry', 'LC-MS', 'Light Sheet', 'MALDI', 'MIBI', 'Histology', 'RNAseq', 'seqFISH', 'SIMS', 'Slideseq', 'WGS', 'Visium (no probes)', 'Visium (with probes)', 'GeoMx (NGS)', '10X Multiome', 'RNAseq (with probes)', 'PhenoCycler', 'CyCIF', 'MERFISH', 'nanoSPLITS', 'Confocal', 'Thick section Multiphoton MxIF', 'Second Harmonic Generation (SHG)', 'Enhanced Stimulated Raman Spectroscopy (SRS)', 'Molecular Cartography', None, 'MS Lipidomics', 'Segmentation Mask', 'Xenium', 'CyTOF']
+```
+
+
 If call say `UbkgSDK.ops().specimen_categories()` directly after a previous call with `ops(...)` settings, the settings will be reused from the last call.
 To make a fresh call on each request with default options, use `UbkgSDK.ops().*`.
 

@@ -26,8 +26,8 @@ class UbkgSDK:
         val_callback = None # The callback to apply on the dict value
         data_as_val = False  # Whether to return the full UBKG data as value of key
         url_params = None  # Url parameters to apply to the request
-        key = 'term'  # Which property value from the item to return as the key of the transform result
-        val_key = None  # Which property value from the item to return as the value of the transform result
+        key = 'term'  # Which property from the item to use as the key of the transform result
+        val_key = None  # Which property from the item to use as the value of the transform result
         obj_type = 'class'  # How to represent the return
 
     @staticmethod
