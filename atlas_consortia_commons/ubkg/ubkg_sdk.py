@@ -87,6 +87,8 @@ class UbkgSDK:
 
     @staticmethod
     def _as_list_or_class(obj, as_arr: bool = False, cb=str):
+        if as_arr and obj is None:
+            return []
         return obj if not as_arr else list(map(cb, obj))
 
     @staticmethod
