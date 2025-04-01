@@ -44,7 +44,79 @@ Will return the following transform result:
 {'DATASET': {'code': 'C050002', 'sab': 'SENNET', 'term': 'Dataset'}, 'SAMPLE': {'code': 'C050003', 'sab': 'SENNET', 'term': 'Sample'}, 'SOURCE': {'code': 'C050004', 'sab': 'SENNET', 'term': 'Source'}, 'PUBLICATION_ENTITY': {'code': 'C050021', 'sab': 'SENNET', 'term': 'Publication Entity'}}
 ```
 
+When dealing with nested objects, can grab values by providing `prop_callback` and `val_callback` functions. With `key='value'` in `UbkgSDK.assay_classes()` and given the following data example (full list truncated):
 ```
+Data:
+[
+  {
+    "rule_description": {
+      "application_context": "SENNET",
+      "code": "C200001",
+      "name": "non-DCWG primary AF"
+    },
+    "value": {
+      "active_status": "active",
+      "assaytype": "AF",
+      "contains_full_genetic_sequences": false,
+      "dataset_type": "Auto-fluorescence",
+      "description": "Auto-fluorescence Microscopy",
+      "dir_schema": "af-v0",
+      "is_multiassay": false,
+      "must_contain": [],
+      "pipeline_shorthand": null,
+      "process_state": "primary",
+      "tbl_schema": "af-v",
+      "vitessce_hints": []
+    }
+  },
+  {
+    "rule_description": {
+      "application_context": "SENNET",
+      "code": "C200010",
+      "name": "derived AF_pyramid"
+    },
+    "value": {
+      "active_status": "active",
+      "assaytype": "AF_pyramid",
+      "contains_full_genetic_sequences": false,
+      "dataset_type": "Auto-fluorescence",
+      "description": "Auto-fluorescence Microscopy [Image Pyramid]",
+      "dir_schema": null,
+      "is_multiassay": false,
+      "must_contain": [],
+      "pipeline_shorthand": "Image Pyramid",
+      "process_state": "derived",
+      "tbl_schema": null,
+      "vitessce_hints": [
+        "is_support",
+        "pyramid"
+      ]
+    }
+  },
+   {
+    "rule_description": {
+      "application_context": "SENNET",
+      "code": "C200020",
+      "name": "non-DCWG primary ATACseq-bulk"
+    },
+    "value": {
+      "active_status": "active",
+      "assaytype": "ATACseq-bulk",
+      "contains_full_genetic_sequences": true,
+      "dataset_type": "ATACseq",
+      "description": "Bulk ATACseq",
+      "dir_schema": "bulkatacseq-v0",
+      "is_multiassay": false,
+      "must_contain": [],
+      "pipeline_shorthand": null,
+      "process_state": "primary",
+      "tbl_schema": "bulkatacseq-v",
+      "vitessce_hints": []
+    }
+  },
+  :
+  :
+ ]
 def prop_callback(d):
     return d["assaytype"]
 
