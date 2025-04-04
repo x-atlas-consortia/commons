@@ -55,7 +55,8 @@ def includes(data, keyword, as_list=True, insensitive=True, single_index=False):
 
 
 def enum_val_lower(member):
-    return member.value.lower()
+    val = member.value
+    return val if val is None else val.lower()
 
 
 def enum_val(member):
