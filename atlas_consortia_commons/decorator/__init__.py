@@ -1,4 +1,5 @@
 import sys
+import urllib.parse
 from functools import wraps
 from inspect import signature
 
@@ -287,6 +288,35 @@ def require_valid_token(param: str = "token", user_param: str = "user"):
                     is_data_admin=isinstance(is_admin, bool) and is_admin is True,
                 )
 
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator
+
+def strip_whitespace_id(id: str):
+    """A decorator that strips whitespace from the ID in a path variable.
+
+    Parameters
+    ----------
+    id : str
+        The ID passed to the endpoint via path parameter.
+
+    Example
+    -------
+        @app.route("/foo/<id>", methods=["GET"])
+        @strip_whitespace_id
+        def foo(id: str):
+
+    """
+
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "id" in kwargs:
+                original_id = kwargs["id"]
+                # URL decode the ID and strip any whitespace
+                kwargs["id"]=urllib.parse.unquote(original_id).strip()
             return f(*args, **kwargs)
 
         return decorated_function
