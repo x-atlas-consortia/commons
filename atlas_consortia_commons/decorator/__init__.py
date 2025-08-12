@@ -294,13 +294,9 @@ def require_valid_token(param: str = "token", user_param: str = "user"):
 
     return decorator
 
-def strip_whitespace_id(id: str):
-    """A decorator that strips whitespace from the ID in a path variable.
 
-    Parameters
-    ----------
-    id : str
-        The ID passed to the endpoint via path parameter.
+def strip_whitespace_id():
+    """A decorator that strips whitespace from the ID in a path variable.
 
     Example
     -------
@@ -316,7 +312,7 @@ def strip_whitespace_id(id: str):
             if "id" in kwargs:
                 original_id = kwargs["id"]
                 # URL decode the ID and strip any whitespace
-                kwargs["id"]=urllib.parse.unquote(original_id).strip()
+                kwargs["id"] = urllib.parse.unquote(original_id).strip()
             return f(*args, **kwargs)
 
         return decorated_function
