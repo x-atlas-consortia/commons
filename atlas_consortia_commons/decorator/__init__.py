@@ -318,3 +318,48 @@ def strip_whitespace_id():
         return decorated_function
 
     return decorator
+
+
+def suppress_reindex(param: str = "reindex"):
+    """A decorator that checks if reindexing should be suppressed. Default to reindxing in all other cases.
+
+    Parameters
+    ----------
+    param : str
+        The name of the parameter to pass whether or not to reindex. Defaults to "reindex".
+
+    Example
+    -------
+        @app.route("/foo", methods=["POST"])
+        @suppress_reindex(reindex="foo_reindex")
+        def foo(foo_reindex: str):
+             if suppress_reindex:
+                logger.log(level=logging.INFO
+                , msg=f"Re-indexing suppressed during modification of {normalized_entity_type}"
+                f" with UUID {entity_uuid}")
+            else:
+                reindex_entity(entity_uuid, user_token)
+    """
+
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "reindex" not in request.args:
+                kwargs["suppress_reindex"] = False
+                return f(*args, **kwargs)
+
+            reindex_str = request.args.get("reindex").lower()
+            if reindex_str == "false":
+                kwargs["suppress_reindex"] = True
+                return f(*args, **kwargs)
+            elif reindex_str == "true":
+                kwargs["suppress_reindex"] = False
+                return f(*args, **kwargs)
+            raise Exception(
+                f"The value of the 'reindex' parameter must be True or False (case-insensitive)."
+                f" '{request.args.get('reindex')}' is not recognized."
+            )
+
+        return decorated_function
+
+    return decorator
