@@ -110,7 +110,7 @@ def test_hubmap_id_converter(app, input, expected_result):
         ("b251764ed6dfaa78", 404),
     ],
 )
-def test_sennet_entity_id_converter(app, input, expected_result):
+def test_hubmap_entity_id_converter(app, input, expected_result):
     """Test that the HuBMAP entity id converter works as expected."""
     app.url_map.converters["entity_id"] = converter.HuBMAPEntityIDConverter
 

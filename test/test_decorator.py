@@ -113,7 +113,7 @@ def test_require_valid_token_unsuccess(app, auth_helper, token):
     @app.route("/test")
     @require_valid_token()
     def test_route(token: str, user: User):
-        return jsonify({"token": token, "uuid": user_id}), 200
+        return jsonify({"token": token, "uuid": user}), 200
 
     with app.test_client() as client:
         res = client.get("/test", headers=headers)
