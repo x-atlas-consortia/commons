@@ -1,4 +1,5 @@
 import sys
+import urllib.parse
 from functools import wraps
 from inspect import signature
 
@@ -11,7 +12,17 @@ from atlas_consortia_commons.rest import (
     abort_unauthorized,
 )
 
-if sys.version_info >= (3, 7):
+if sys.version_info >= (3, 10):
+    from dataclasses import dataclass
+
+    @dataclass(slots=True, frozen=True)
+    class User:
+        uuid: str
+        email: str
+        group_uuids: list
+        is_data_admin: bool
+
+elif sys.version_info >= (3, 7):
     from dataclasses import dataclass
 
     @dataclass(frozen=True)
@@ -66,9 +77,7 @@ def require_json(
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not request.is_json:
-                abort_bad_req(
-                    "A json body and appropriate Content-Type header are required"
-                )
+                abort_bad_req("A json body and appropriate Content-Type header are required")
 
             if param and param in signature(f).parameters:
                 # Check if the parameter has a type annotation
@@ -128,9 +137,7 @@ def require_multipart_form(
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not request.content_type.startswith("multipart/form-data"):
-                abort_bad_req(
-                    "A form data body and appropriate Content-Type header are required"
-                )
+                abort_bad_req("A form data body and appropriate Content-Type header are required")
 
             if form_param and form_param in signature(f).parameters:
                 kwargs[form_param] = request.form
@@ -288,6 +295,77 @@ def require_valid_token(param: str = "token", user_param: str = "user"):
                 )
 
             return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator
+
+
+def strip_whitespace_id():
+    """A decorator that strips whitespace from the ID in a path variable.
+
+    Example
+    -------
+        @app.route("/foo/<id>", methods=["GET"])
+        @strip_whitespace_id
+        def foo(id: str):
+
+    """
+
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "id" in kwargs:
+                original_id = kwargs["id"]
+                # URL decode the ID and strip any whitespace
+                kwargs["id"] = urllib.parse.unquote(original_id).strip()
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator
+
+
+def suppress_reindex(param: str = "reindex"):
+    """A decorator that checks if reindexing should be suppressed. Default to reindexing in all
+    other cases.
+
+    Parameters
+    ----------
+    param : str
+        The name of the parameter to pass whether or not to reindex. Defaults to "reindex".
+
+    Example
+    -------
+        @app.route("/foo", methods=["POST"])
+        @suppress_reindex(reindex="foo_reindex")
+        def foo(foo_reindex: str):
+             if suppress_reindex:
+                logger.log(level=logging.INFO
+                , msg=f"Re-indexing suppressed during modification of {normalized_entity_type}"
+                f" with UUID {entity_uuid}")
+            else:
+                reindex_entity(entity_uuid, user_token)
+    """
+
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "reindex" not in request.args:
+                kwargs["suppress_reindex"] = False
+                return f(*args, **kwargs)
+
+            reindex_str = request.args.get("reindex").lower()
+            if reindex_str == "false":
+                kwargs["suppress_reindex"] = True
+                return f(*args, **kwargs)
+            elif reindex_str == "true":
+                kwargs["suppress_reindex"] = False
+                return f(*args, **kwargs)
+            raise Exception(
+                f"The value of the 'reindex' parameter must be True or False (case-insensitive)."
+                f" '{request.args.get('reindex')}' is not recognized."
+            )
 
         return decorated_function
 
