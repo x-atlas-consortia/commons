@@ -12,7 +12,17 @@ from atlas_consortia_commons.rest import (
     abort_unauthorized,
 )
 
-if sys.version_info >= (3, 7):
+if sys.version_info >= (3, 10):
+    from dataclasses import dataclass
+
+    @dataclass(slots=True, frozen=True)
+    class User:
+        uuid: str
+        email: str
+        group_uuids: list
+        is_data_admin: bool
+
+elif sys.version_info >= (3, 7):
     from dataclasses import dataclass
 
     @dataclass(frozen=True)
@@ -67,9 +77,7 @@ def require_json(
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not request.is_json:
-                abort_bad_req(
-                    "A json body and appropriate Content-Type header are required"
-                )
+                abort_bad_req("A json body and appropriate Content-Type header are required")
 
             if param and param in signature(f).parameters:
                 # Check if the parameter has a type annotation
@@ -129,9 +137,7 @@ def require_multipart_form(
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not request.content_type.startswith("multipart/form-data"):
-                abort_bad_req(
-                    "A form data body and appropriate Content-Type header are required"
-                )
+                abort_bad_req("A form data body and appropriate Content-Type header are required")
 
             if form_param and form_param in signature(f).parameters:
                 kwargs[form_param] = request.form
@@ -321,7 +327,8 @@ def strip_whitespace_id():
 
 
 def suppress_reindex(param: str = "reindex"):
-    """A decorator that checks if reindexing should be suppressed. Default to reindxing in all other cases.
+    """A decorator that checks if reindexing should be suppressed. Default to reindexing in all
+    other cases.
 
     Parameters
     ----------
