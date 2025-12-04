@@ -8,7 +8,7 @@ setup(
     # Test PyPi version
     # version="1.1.3",
     # Prod PyPi version
-    version="1.1.5",
+    version="1.1.6",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
