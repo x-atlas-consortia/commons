@@ -1,3 +1,4 @@
+from __future__ import annotations
 from atlas_consortia_commons.object import build_enum_class
 from atlas_consortia_commons.ubkg import get_from_node, get_server_key, get_endpoint_key
 from atlas_consortia_commons.string import to_snake_case_upper, equals
@@ -22,7 +23,7 @@ class UbkgSDK:
         as_arr = False  # Return as an array
         cb = str  # The callback function to run on value of the transform result
         as_data_dict = False  # Return as a dict
-        prop_callback = to_snake_case_upper  # The callback to apply on the dict key
+        key_callback = to_snake_case_upper  # The callback to apply on the dict key
         val_callback = None # The callback to apply on the dict value
         data_as_val = False  # Whether to return the full UBKG data as value of key
         url_params = None  # Url parameters to apply to the request
@@ -30,26 +31,26 @@ class UbkgSDK:
         val_key = None  # Which property from the item to use as the value of the transform result
         obj_type = 'class'  # How to represent the return
 
-    @staticmethod
-    def ops(as_arr: bool = False, cb=str, as_data_dict: bool = False, prop_callback=to_snake_case_upper,
+    @classmethod
+    def ops(cls: UbkgSDK, as_arr: bool = False, cb=str, as_data_dict: bool = False, key_callback=to_snake_case_upper,
             data_as_val=False, url_params: str = None, key: str = 'term', val_key: str = None, val_callback=None):
         UbkgSDK.Ops.as_arr = as_arr
         UbkgSDK.Ops.cb = cb
         UbkgSDK.Ops.as_data_dict = as_data_dict
-        UbkgSDK.Ops.prop_callback = prop_callback
+        UbkgSDK.Ops.key_callback = key_callback
         UbkgSDK.Ops.val_callback = val_callback
         UbkgSDK.Ops.data_as_val = data_as_val
         UbkgSDK.Ops.url_params = url_params
         UbkgSDK.Ops.key = key
         UbkgSDK.Ops.val_key = val_key
-        return UbkgSDK
+        return cls
 
     @staticmethod
     def transform_ontology(obj, class_name: str):
         response = UbkgSDK._get_response(obj, url_params=UbkgSDK.Ops.url_params)
         obj = build_enum_class(class_name, response,
                                prop_key=UbkgSDK.Ops.key, val_key=UbkgSDK.Ops.val_key,
-                               prop_callback=UbkgSDK.Ops.prop_callback,
+                               prop_callback=UbkgSDK.Ops.key_callback,
                                val_callback=UbkgSDK.Ops.val_callback,
                                obj_type=UbkgSDK._get_obj_type(UbkgSDK.Ops.as_arr, UbkgSDK.Ops.as_data_dict),
                                data_as_val=UbkgSDK.Ops.data_as_val)
@@ -60,14 +61,15 @@ class UbkgSDK:
         return UbkgSDK.transform_ontology(_get_instance().entities, 'Entities')
 
     @staticmethod
-    def assay_classes():
-        UbkgSDK.Ops.key = 'value'
-        return UbkgSDK.transform_ontology(_get_instance().assay_classes, 'AssayClasses')
-
-    @staticmethod
     def dataset_types():
         UbkgSDK.Ops.key = 'dataset_type'
         return UbkgSDK.transform_ontology(_get_instance().dataset_types, 'DatasetTypes')
+    
+    @staticmethod
+    def dataset_types_hierarchy():
+        UbkgSDK.Ops.key = 'dataset_type'
+        UbkgSDK.Ops.val_key = 'modalities'
+        return UbkgSDK.transform_ontology(_get_instance().dataset_types_hierarchy, 'DatasetTypesHierarchy')
 
     @staticmethod
     def specimen_categories():
@@ -141,7 +143,7 @@ def init_ontology():
         UbkgSDK.specimen_categories()
         UbkgSDK.organ_types()
         UbkgSDK.entities()
-        UbkgSDK.assay_classes()
+        UbkgSDK.dataset_types_hierarchy()
         UbkgSDK.dataset_types()
         UbkgSDK.source_types()
     except Exception as e:
