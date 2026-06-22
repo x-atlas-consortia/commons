@@ -60,14 +60,15 @@ class UbkgSDK:
         return UbkgSDK.transform_ontology(_get_instance().entities, 'Entities')
 
     @staticmethod
-    def assay_classes():
-        UbkgSDK.Ops.key = 'value'
-        return UbkgSDK.transform_ontology(_get_instance().assay_classes, 'AssayClasses')
-
-    @staticmethod
     def dataset_types():
         UbkgSDK.Ops.key = 'dataset_type'
         return UbkgSDK.transform_ontology(_get_instance().dataset_types, 'DatasetTypes')
+    
+    @staticmethod
+    def dataset_types_hierarchy():
+        UbkgSDK.Ops.key = 'dataset_type'
+        UbkgSDK.Ops.val_key = 'modalities'
+        return UbkgSDK.transform_ontology(_get_instance().dataset_types_hierarchy, 'DatasetTypesHierarchy')
 
     @staticmethod
     def specimen_categories():
