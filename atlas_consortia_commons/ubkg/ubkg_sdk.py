@@ -1,3 +1,4 @@
+from __future__ import annotations
 from atlas_consortia_commons.object import build_enum_class
 from atlas_consortia_commons.ubkg import get_from_node, get_server_key, get_endpoint_key
 from atlas_consortia_commons.string import to_snake_case_upper, equals
@@ -30,8 +31,8 @@ class UbkgSDK:
         val_key = None  # Which property from the item to use as the value of the transform result
         obj_type = 'class'  # How to represent the return
 
-    @staticmethod
-    def ops(as_arr: bool = False, cb=str, as_data_dict: bool = False, key_callback=to_snake_case_upper,
+    @classmethod
+    def ops(cls: UbkgSDK, as_arr: bool = False, cb=str, as_data_dict: bool = False, key_callback=to_snake_case_upper,
             data_as_val=False, url_params: str = None, key: str = 'term', val_key: str = None, val_callback=None):
         UbkgSDK.Ops.as_arr = as_arr
         UbkgSDK.Ops.cb = cb
@@ -42,7 +43,7 @@ class UbkgSDK:
         UbkgSDK.Ops.url_params = url_params
         UbkgSDK.Ops.key = key
         UbkgSDK.Ops.val_key = val_key
-        return UbkgSDK
+        return cls
 
     @staticmethod
     def transform_ontology(obj, class_name: str):
