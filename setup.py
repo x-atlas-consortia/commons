@@ -6,9 +6,9 @@ with open("README.md", "r") as fh:
 setup(
     name="atlas_consortia_commons",
     # Test PyPi version
-    # version="1.1.3",
+    # version="1.1.7a",
     # Prod PyPi version
-    version="1.1.6",
+    version="1.1.7",
     author="Atlas Consortia",
     author_email="api-developers@hubmapconsortium.org",
     description="The common code supporting the web services in the consortia.",
